@@ -57,13 +57,13 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- [[ Oil.nvim Floating Window Keymaps ]]
 -- These keymaps open Oil.nvim in a floating window.
 -- They are placed here because they are general Neovim commands, not specific to actions *within* an Oil buffer.
-vim.keymap.set('n', '<leader>of', function()
-  require('oil').open_float('.')
+vim.keymap.set('n', '<leader>o', function()
+  require('oil').open_float '.'
 end, { desc = 'Oil: Open float in CWD' })
 
-vim.keymap.set('n', '<leader>oF', function()
-  require('oil').open_float(vim.fn.expand '%:p:h')
-end, { desc = "Oil: Open float in current file's directory" })
+-- vim.keymap.set('n', '<leader>oF', function()
+--   require('oil').open_float(vim.fn.expand '%:p:h')
+-- end, { desc = "Oil: Open float in current file's directory" })
 
 -- [[ Recommended Python Run Keymap (Floating Term via ToggleTerm) ]]
 -- This keymap uses `toggleterm.nvim` to run the current Python file in a floating terminal window.
