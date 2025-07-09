@@ -1,3 +1,5 @@
+-- ~/.config/nvim/lua/keymaps.lua
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -32,6 +34,7 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
+-- If you uncomment these, ensure they end with '})'
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
@@ -54,12 +57,52 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- [[ Oil.nvim Floating Window Keymaps ]]
 -- These keymaps open Oil.nvim in a floating window.
 -- They are placed here because they are general Neovim commands, not specific to actions *within* an Oil buffer.
-vim.keymap.set("n", "<leader>of", function()
-  require("oil").open_float(".")
-end, { desc = "Oil: Open float in CWD" })
+vim.keymap.set('n', '<leader>of', function()
+  require('oil').open_float('.')
+end, { desc = 'Oil: Open float in CWD' })
 
-vim.keymap.set("n", "<leader>oF", function()
-  require("oil").open_float(vim.fn.expand("%:p:h"))
+vim.keymap.set('n', '<leader>oF', function()
+  require('oil').open_float(vim.fn.expand '%:p:h')
 end, { desc = "Oil: Open float in current file's directory" })
+
+-- [[ Recommended Python Run Keymap (Floating Term via ToggleTerm) ]]
+-- This keymap uses `toggleterm.nvim` to run the current Python file in a floating terminal window.
+-- It saves the current file, constructs the command to run it from its directory,
+-- and then creates/toggles a floating terminal to execute this command.
+vim.keymap.set('n', '<leader>r', function()
+  -- Check if the current file is a Python file
+  if vim.bo.filetype == 'python' then
+    vim.cmd 'w' -- Save the current file
+
+    -- Get the full path and directory of the current file, shell-escaped
+    local file_path = vim.fn.shellescape(vim.fn.expand '%:p')
+    local file_dir = vim.fn.shellescape(vim.fn.expand '%:h')
+    local file_name = vim.fn.shellescape(vim.fn.expand '%:t')
+
+    -- Construct the command to run: change directory, then execute python3 with -i
+    -- The '-i' flag keeps the Python interpreter interactive after the script finishes.
+    local run_command = 'cd ' .. file_dir .. ' && python3 -i ' .. file_name
+
+    -- Use ToggleTerm to open/toggle a floating terminal and execute the command.
+    require('toggleterm.terminal').Terminal
+      :new({
+        cmd = run_command,
+        direction = 'float',
+        -- You can keep or remove 'hidden = true'. If removed, the terminal will always
+        -- appear even if it was previously open and hidden.
+        -- hidden = true,
+        float_opts = {
+          border = 'rounded',
+          width = math.floor(vim.o.columns * 0.8), -- 80% of screen width
+          height = math.floor(vim.o.lines * 0.6), -- 60% of screen height
+          row = math.floor((vim.o.lines - math.floor(vim.o.lines * 0.6)) / 2),
+          col = math.floor((vim.o.columns - math.floor(vim.o.columns * 0.8)) / 2),
+        },
+      })
+      :toggle() -- The :toggle() method creates and shows the terminal, or hides it if already visible
+  else
+    vim.notify('Not a Python file (filetype is ' .. vim.bo.filetype .. ').', vim.log.levels.WARN, { title = 'Run Script' })
+  end
+end, { desc = 'Run [P]ython File (Floating)' })
 
 -- vim: ts=2 sts=2 sw=2 et
