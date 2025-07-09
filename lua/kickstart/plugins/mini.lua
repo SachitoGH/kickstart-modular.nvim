@@ -32,6 +32,17 @@ return {
         return '%2l:%-2v'
       end
 
+      -- === ADDED mini.icons SETUP HERE ===
+      -- Icons for different file types and Git statuses
+      -- This is what Oil.nvim (and other plugins) will use for file icons
+      require('mini.icons').setup({
+        -- By default, mini.icons tries to use Nerd Fonts if available.
+        -- You can customize options here if needed, for example:
+        -- use_devicons = true, -- if you specifically want to use nvim-web-devicons glyphs
+        -- (though mini.icons has its own good defaults)
+      })
+      -- ===================================
+
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
