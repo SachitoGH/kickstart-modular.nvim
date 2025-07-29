@@ -86,4 +86,7 @@ if vim.fn.has 'wsl' == 1 then
     cache_enabled = true, -- Recommended for performance
   }
 end
--- vim: ts=2 sts=2 sw=2 et
+
+vim.opt.fillchars = {
+  diff = '╱',
+}
