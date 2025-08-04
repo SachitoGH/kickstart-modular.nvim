@@ -90,3 +90,5 @@ end
 vim.opt.fillchars = {
   diff = '╱',
 }
+
+-- vim.o.guicursor = 'n-v-c-sm-i-r:block'
