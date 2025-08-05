@@ -26,13 +26,7 @@ return {
   config = function(_, opts)
     require('toggleterm').setup(opts)
 
-    -- Keymap: Exit terminal mode and toggle the ToggleTerm window
-    -- This ensures the python -i process is killed when you press Esc Esc.
-    -- 1. <C-\><C-n> exits terminal-insert mode to normal mode.
-    -- 2. :ToggleTerm<CR> then executes the ToggleTerm command from normal mode,
-    --    which will hide your floating terminal.
-    vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>:ToggleTerm<CR>', { noremap = true, silent = true, desc = 'Toggle/Exit terminal' })
-
-    -- The <leader>r keymap has been moved back to keymaps.lua to ensure it's defined at startup.
+    -- Keymap: Close the ToggleTerm window with 'Ctrl-c' directly in terminal-insert mode
+    vim.keymap.set('t', '<C-c>', '<C-\\><C-n>:ToggleTerm<CR>', { noremap = true, silent = true, desc = 'Close terminal' })
   end,
 }
